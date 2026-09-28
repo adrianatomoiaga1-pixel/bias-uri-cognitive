@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dosarul Gândirii</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFE6D5; --paper2:#E5D9C2; --ink:#1B1B1B; --navy:#16213E; --navy2:#233156;
+  --red:#B23A32; --sage:#5E7A52; --sagebg:#E3E9DA; --redbg:#F3DAD7; --gold:#B08D3F;
+  --card:#FBF7ED; --line:#C9BC9F;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --paper:#1B2430; --paper2:#212C3B; --ink:#EFE6D5; --card:#26313F; --line:#3A465A; --sagebg:#2A3A2A; --redbg:#3A2626; }}
+:root[data-theme="dark"]{ --paper:#1B2430; --paper2:#212C3B; --ink:#EFE6D5; --card:#26313F; --line:#3A465A; --sagebg:#2A3A2A; --redbg:#3A2626; }
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.5;}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:700;margin:0;}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px;}
+header.hero{padding:36px 20px 26px;background:var(--navy);color:var(--paper);}
+header.hero .wrap{padding-top:0;padding-bottom:0;}
+.eyebrow{font-size:.8rem;color:var(--gold);margin-bottom:6px;letter-spacing:.02em;}
+h1{font-size:2.3rem;line-height:1.05;color:#fff;}
+.hero p{max-width:56ch;color:#D9CFB8;font-size:1rem;margin-top:12px;}
+nav.tabs{display:flex;gap:6px;margin-top:22px;flex-wrap:wrap;}
+nav.tabs button{background:var(--navy2);color:#D9CFB8;border:1px solid #3A4A70;border-radius:5px;padding:9px 13px;font-family:'Inter';font-size:.88rem;cursor:pointer;}
+nav.tabs button.active{background:var(--gold);color:#1B1B1B;border-color:var(--gold);font-weight:600;}
+section{display:none;}
+section.active{display:block;}
+.folder{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:18px 20px;margin-bottom:16px;position:relative;}
+.folder h3{font-size:1.08rem;margin-bottom:6px;}
+.folder .tag{display:inline-block;font-size:.72rem;background:var(--redbg);color:var(--red);padding:2px 8px;border-radius:3px;margin-bottom:8px;}
+.folder p{margin:0;font-size:.94rem;}
+.folder .ex{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-style:italic;font-size:.9rem;opacity:.85;}
+.intro-p{font-size:.98rem;margin-bottom:18px;}
+.game-box{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:22px 20px;}
+.score{font-size:.85rem;color:var(--gold);margin-bottom:10px;}
+.scenario{font-size:1.05rem;margin-bottom:16px;}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opts button{text-align:left;background:var(--paper2);border:1px solid var(--line);border-radius:4px;padding:11px 14px;font-family:'Inter';font-size:.92rem;color:var(--ink);cursor:pointer;}
+.opts button:hover{border-color:var(--gold);}
+.opts button.correct{background:var(--sagebg);border-color:var(--sage);}
+.opts button.wrong{background:var(--redbg);border-color:var(--red);}
+.opts button:disabled{cursor:default;}
+.feedback{margin-top:14px;padding:12px 14px;border-radius:4px;font-size:.9rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--sagebg);}
+.feedback.bad{background:var(--redbg);}
+.nextbtn{margin-top:14px;background:var(--gold);color:#1B1B1B;border:none;border-radius:4px;padding:10px 16px;font-weight:600;cursor:pointer;display:none;}
+.nextbtn.show{display:inline-block;}
+.dilemma-title{font-size:1.1rem;margin-bottom:8px;}
+.dilemma-text{font-size:.95rem;margin-bottom:16px;}
+.choicebtn{display:block;width:100%;text-align:left;background:var(--paper2);border:1px solid var(--line);border-radius:4px;padding:12px 14px;margin-bottom:9px;font-family:'Inter';font-size:.92rem;color:var(--ink);cursor:pointer;}
+.choicebtn:hover{border-color:var(--red);}
+.consequence{margin-top:6px;padding:14px;background:var(--redbg);border-radius:4px;font-size:.92rem;}
+.consequence .q{margin-top:10px;font-weight:600;font-style:italic;}
+.smallbtn{margin-top:14px;background:none;border:1px solid var(--line);border-radius:4px;padding:8px 14px;font-size:.85rem;color:var(--ink);cursor:pointer;}
+footer{text-align:center;font-size:.82rem;opacity:.6;padding:20px;}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">UN ATELIER PENTRU LICEU · CLASELE XI–XII</div>
+    <h1>Dosarul Gândirii</h1>
+    <p>Creierul tău e un anchetator leneș: preferă concluzia rapidă în locul celei corecte. Aici înveți să-i prinzi scurtăturile — în argumente, pe rețele, în conflicte cu prietenii — înainte să te tragă pe sfoară.</p>
+    <nav class="tabs">
+      <button data-tab="teorie" class="active">Dosarele</button>
+      <button data-tab="detectiv">Joc: Detectivul</button>
+      <button data-tab="dilema">Joc: Dilema</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section id="teorie" class="active">
+  <p class="intro-p">O eroare de gândire seamănă cu un argument bun, dar are un fir logic rupt undeva. Nu contează dacă, întâmplător, concluzia e adevărată — procesul care a dus la ea e stricat. Patru dosare, fiecare cu tactica pe care o folosește mintea ta ca să scape de efortul de a gândi corect.</p>
+
+  <div class="folder">
+    <span class="tag">Dosar 1 — Capcane de autoritate</span>
+    <h3>„Așa a zis cineva important”</h3>
+    <p>Apel la autoritate (crezi ceva doar pentru că vine de la cineva cunoscut), aserțiune goală (nicio dovadă, doar tonul ferm), apel la tradiție și apel la noutate (e bun pentru că e vechi / e bun pentru că e nou).</p>
+    <div class="ex">Ex: „Influencerul X a zis că proteinele din plante nu sunt suficiente” — spus de cineva care nu are nicio pregătire în nutriție, dar are 2 milioane de urmăritori.</div>
+  </div>
+
+  <div class="folder">
+    <span class="tag">Dosar 2 — Capcane emoționale</span>
+    <h3>„Te fac să simți ceva, ca să nu mai gândești”</h3>
+    <p>Apelul la Hitler (comparație exagerată ca să inducă vinovăție), heringul roșu (o remarcă încărcată emoțional care schimbă subiectul), panta alunecoasă (un pas mic „va duce sigur” la un dezastru).</p>
+    <div class="ex">Ex: „Dacă profa ne dă temă în weekend, mâine ne dă și-n vacanță, apoi renunțăm la liceu de-a binelea” — de la o temă la abandon școlar, fără nicio legătură reală.</div>
+  </div>
+
+  <div class="folder">
+    <span class="tag">Dosar 3 — Distragere logică</span>
+    <h3>„Schimb subiectul fără să pară”</h3>
+    <p>Omul de paie (deformezi ce a zis celălalt, ca să fie ușor de contrazis), tu quoque („și tu ai greșit, deci e ok”), raționament circular (dovada e chiar concluzia repetată), alphabet soup (jargon care sună smart și blochează întrebările).</p>
+    <div class="ex">Ex: „Nu poți să-mi zici mie să nu mai stau pe telefon, tu ești pe laptop toată ziua” — nu răspunde la argument, doar întoarce acuzația.</div>
+  </div>
+
+  <div class="folder">
+    <span class="tag">Dosar 4 — Falsele extreme</span>
+    <h3>„Doar două opțiuni există”</h3>
+    <p>Falsa dilemă (ori-ori, deși există și altă cale), niciun scoțian adevărat (muți definiția ca să eviți excepția), mutarea ștachetei (când ți se dă o dovadă, ceri alta, mai grea), argumentul Nirvana (respingi o soluție bună pentru că nu e perfectă).</p>
+    <div class="ex">Ex: „Nu ești cu adevărat prietena mea dacă nu-mi dai like la orice postare” — definiția prieteniei se schimbă ca să excludă orice excepție.</div>
+  </div>
+
+  <p class="intro-p" style="margin-top:4px">Treci la joc — nu memorezi definiții, le prinzi în flagrant.</p>
+</section>
+
+<section id="detectiv">
+  <div class="game-box">
+    <div class="score" id="detScore">Scor: 0 / 0</div>
+    <div class="scenario" id="detScenario"></div>
+    <div class="opts" id="detOpts"></div>
+    <div class="feedback" id="detFeedback"></div>
+    <button class="nextbtn" id="detNext">Următorul caz →</button>
+  </div>
+</section>
+
+<section id="dilema">
+  <div class="game-box" id="dilemaBox"></div>
+</section>
+
+</div>
+<footer>Dosarul Gândirii — atelier de gândire critică</footer>
+
+<script>
+const cases=[
+{s:"Un coleg spune: „Fie ești cu grupul nostru la proiect, fie ești împotriva echipei.” Ce eroare comite?",
+ o:["Falsă dilemă","Apel la autoritate","Raționament circular"],c:0,
+ e:"Falsă dilemă: pare că sunt doar 2 opțiuni, dar poți fi neutru, poți avea alte motive, poți colabora parțial."},
+{s:"„Nu se poate să ai dreptate, ești doar în clasa a XI-a, ce știi tu?” — ce eroare e asta?",
+ o:["Ad hominem (ataci persoana, nu ideea)","Panta alunecoasă","Heringul roșu"],c:0,
+ e:"Ad hominem: respingi argumentul atacând vârsta/statutul celui care vorbește, nu conținutul spus."},
+{s:"„Dacă începi să întârzii la antrenamente, apoi o să lipsești de la meciuri, apoi o să te dea afară din echipă, apoi o să rămâi singur.” Ce e asta?",
+ o:["Panta alunecoasă","Apel la majoritate","Alphabet soup"],c:0,
+ e:"Panta alunecoasă: un lanț de consecințe extreme prezentat ca inevitabil, fără dovezi că fiecare pas chiar duce automat la următorul."},
+{s:"„Toată lumea din grupul de WhatsApp e de acord cu mine, deci clar eu am dreptate.” Ce eroare e?",
+ o:["Apel la majoritate (ad populum)","No true Scotsman","Mutarea ștachetei"],c:0,
+ e:"Apel la majoritate: numărul de oameni care cred ceva nu face acel lucru adevărat."},
+{s:"„Da, am copiat la test, dar și Andrei a copiat săptămâna trecută.” Ce eroare e?",
+ o:["Tu quoque","Argumentul Nirvana","Non sequitur"],c:0,
+ e:"Tu quoque: greșeala altcuiva nu îți justifică propria greșeală, doar mută atenția de la ea."},
+{s:"Cineva zice: „Niciun fan adevărat al trupei nu ratează concertul.” Prietenul tău, fan de 5 ani, nu poate merge din motive financiare. Răspunsul: „Păi atunci nu e fan adevărat.” Ce eroare e?",
+ o:["No true Scotsman","Falsa cauzalitate","Apel la tradiție"],c:0,
+ e:"No true Scotsman: în loc să accepte excepția, definiția e mutată ca s-o excludă cu forța."},
+{s:"„Am purtat brățara asta la BAC și am luat notă mare, deci brățara aduce noroc.” Ce eroare e?",
+ o:["Falsă cauzalitate (corelație confundată cu cauzalitate)","Ipse dixit","Omul de paie"],c:0,
+ e:"Falsă cauzalitate: două evenimente s-au întâmplat unul după altul, dar asta nu înseamnă că unul l-a cauzat pe celălalt."},
+{s:"Un părinte spune: „Nu vreau să ieși diseară.” Tu răspunzi: „Deci vrei să stau închis toată viața și să n-am niciodată prieteni?” Ce eroare comiți?",
+ o:["Omul de paie (deformezi poziția lui)","Apel la Hitler","Alphabet soup"],c:0,
+ e:"Omul de paie: exagerezi și deformezi ce a zis părintele într-o poziție mult mai ușor de atacat."},
+{s:"„Nu putem vorbi despre reducerea temelor pentru că regulamentul spune că trebuie să fie teme.” Ce eroare e?",
+ o:["Raționament circular","Argumentul Nirvana","Ad populum"],c:0,
+ e:"Raționament circular: folosește chiar regula pusă sub semnul întrebării ca dovadă că regula e corectă."},
+{s:"„De ce să mai reciclăm puțin acasă dacă tot poluează fabricile enorm? Nu are niciun sens.” Ce eroare e?",
+ o:["Argumentul Nirvana","No true Scotsman","Tu quoque"],c:0,
+ e:"Argumentul Nirvana: o soluție parțială e respinsă pentru că nu rezolvă problema perfect sau în întregime."},
+{s:"„L-am întrebat pe profesorul de sport ce părere are despre politica externă, și a zis X, deci X e adevărat.” Ce eroare e?",
+ o:["Apel la autoritate greșit plasată","Falsa dilemă","Mutarea ștachetei"],c:0,
+ e:"Apel la autoritate: expertiza într-un domeniu (sport) nu transferă credibilitate automată în alt domeniu (politică)."},
+{s:"Cineva susține că un remediu funcționează. I se arată un studiu care spune că nu. Răspunde: „Bine, dar studiul nu a testat pe suficient de mulți oameni.” I se arată un studiu mai mare. Răspunde: „Dar nu a durat suficient.” Ce eroare e?",
+ o:["Mutarea ștachetei","Heringul roșu","Falsă cauzalitate"],c:0,
+ e:"Mutarea ștachetei: de fiecare dată când i se aduce o dovadă, pragul cerut pentru a accepta e ridicat, ca să nu poată fi convins niciodată."}
+];
+let order=[],idx=0,score=0,total=0;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function loadCase(){
+  const c=cases[order[idx]];
+  document.getElementById('detScenario').textContent=c.s;
+  const optsEl=document.getElementById('detOpts');
+  optsEl.innerHTML='';
+  const opts=c.o.map((t,i)=>({t,correct:i===c.c}));
+  shuffle(opts);
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.textContent=o.t;
+    b.onclick=()=>answer(b,o.correct,c.e);
+    optsEl.appendChild(b);
+  });
+  document.getElementById('detFeedback').className='feedback';
+  document.getElementById('detNext').className='nextbtn';
+}
+function answer(btn,correct,explain){
+  document.querySelectorAll('#detOpts button').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  total++; if(correct) score++;
+  document.getElementById('detScore').textContent=`Scor: ${score} / ${total}`;
+  const fb=document.getElementById('detFeedback');
+  fb.textContent=(correct?'Exact. ':'Nu chiar. ')+explain;
+  fb.className='feedback show '+(correct?'ok':'bad');
+  document.getElementById('detNext').className='nextbtn show';
+}
+document.getElementById('detNext').onclick=()=>{
+  idx++;
+  if(idx>=order.length){order=shuffle([...Array(cases.length).keys()]);idx=0;}
+  loadCase();
+};
+order=shuffle([...Array(cases.length).keys()]);
+loadCase();
+
+const dilemmas=[
+{t:"Grupul de prieteni",
+ x:"Vezi în grupul de WhatsApp al clasei un mesaj în care cineva face mișto de un coleg mai retras. Toată lumea pune emoji de râs, inclusiv cei mai buni prieteni ai tăi.",
+ ch:[
+  {l:"Pui și tu un emoji, ca să nu ieși din grup.",
+   con:"Te-ai protejat pe moment, dar ai contribuit la o presiune pe care, dacă ai simți-o pe pielea ta, ai numi-o bullying.",
+   q:"Ce eroare de gândire te-a împins să faci asta — apelul la majoritate, sau frica de excludere?"},
+  {l:"Scrii privat colegului luat în derâdere, fără să te expui în grup.",
+   con:"Nu ai schimbat dinamica grupului, dar ai arătat cuiva că nu e singur — și te-ai ferit de riscul de a deveni ținta următoare.",
+   q:"E suficient să sprijini în privat, sau tăcerea publică e tot un fel de complicitate?"},
+  {l:"Scrii în grup că nu ți se pare ok.",
+   con:"Riști reacția grupului („ce, ești sensibil acum?”), dar și șansa ca alții, care gândeau la fel, să se alăture.",
+   q:"De ce ne e mai frică de dezaprobarea grupului decât de a face ce credem că e corect?"}
+ ]},
+{t:"Nota și adevărul",
+ x:"Cea mai bună prietenă a ta a copiat la un test important și a luat notă mare. Profesorul te întreabă direct dacă știi ceva.",
+ ch:[
+  {l:"Negi că știi ceva.",
+   con:"Prietenia rămâne neatinsă azi, dar ai mințit direct un adult și porți singură povara secretului.",
+   q:"E loialitatea față de un prieten o justificare validă pentru minciună, sau doar un tu quoque pe care ți-l spui ție?"},
+  {l:"Spui adevărul.",
+   con:"Prietenia poate suferi pe termen scurt, dar nu construiești o relație pe minciuni păstrate pentru celălalt.",
+   q:"Cum separi loialitatea reală de teama de a dezamăgi pe cineva?"},
+  {l:"Îi spui prietenei, privat, să meargă ea să recunoască.",
+   con:"Îi dai control asupra propriei situații, dar consecința (dacă vine) rămâne amânată și incertă.",
+   q:"E corect să pui responsabilitatea deciziei pe umerii celuilalt, când tot tu ai informația?"}
+ ]},
+{t:"Postarea virală",
+ x:"O poveste emoționantă circulă pe rețele — o acuzație gravă la adresa unui elev din altă clasă, fără nicio dovadă, doar „se zice”. Mii de distribuiri în câteva ore.",
+ ch:[
+  {l:"O distribui și tu, pentru că „nu are fum fără foc”.",
+   con:"Ai folosit exact apelul la majoritate ca dovadă de adevăr — mulți oameni cred ceva, dar asta nu-l face adevărat.",
+   q:"Câți dintre cei care au distribuit au verificat efectiv o singură sursă?"},
+  {l:"Nu o distribui, dar nici nu zici nimic.",
+   con:"Nu ai contribuit la răspândire, dar nici nu ai contrazis pe cineva din anturajul tău care o distribuie convins.",
+   q:"E neutralitatea suficientă când o minciună se răspândește mai repede decât adevărul?"},
+  {l:"Comentezi cerând sursa/dovada înainte de a crede povestea.",
+   con:"Riști să fii perceput ca „apărând” persoana acuzată, dar aduci puțină frânare într-un val emoțional.",
+   q:"De ce simțim nevoia să luăm poziție rapid, înainte să avem toate faptele?"}
+ ]}
+];
+function loadDilemma(i){
+  const d=dilemmas[i];
+  const box=document.getElementById('dilemaBox');
+  box.innerHTML=`<div class="dilemma-title">${d.t}</div><div class="dilemma-text">${d.x}</div><div id="dchoices"></div>`;
+  const cdiv=box.querySelector('#dchoices');
+  d.ch.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='choicebtn';
+    b.textContent=c.l;
+    b.onclick=()=>{
+      cdiv.innerHTML=`<div class="consequence">${c.con}<div class="q">${c.q}</div></div>`;
+      const nb=document.createElement('button');
+      nb.className='smallbtn';
+      nb.textContent='Altă dilemă →';
+      nb.onclick=()=>loadDilemma((i+1)%dilemmas.length);
+      cdiv.appendChild(nb);
+    };
+    cdiv.appendChild(b);
+  });
+}
+loadDilemma(0);
+
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  };
+});
+</script>
+</body>
+</html>
